@@ -3,12 +3,15 @@
 namespace spec\App;
 
 use App\Container;
+use App\Exception\IdentifierAlreadyExistsException;
 use PhpSpec\ObjectBehavior;
 use App\Val;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use App\Exception\InvalidIdentifierException;
 use App\ServiceProviderInterface;
+use App\ConcreteClass;
+use App\ConcreteClassInterface;
 
 class ContainerSpec extends ObjectBehavior
 {
@@ -55,5 +58,16 @@ class ContainerSpec extends ObjectBehavior
         $this->shouldThrow(InvalidIdentifierException::class)->duringSet(array('id'), 'className');
         $this->shouldThrow(InvalidIdentifierException::class)->duringSet(1, 'ClassPath');
         $this->shouldThrow(InvalidIdentifierException::class)->duringSet('', 'ClassPath');
+    }
+
+    function it_can_bind_an_interface_to_a_concrete_implementation(ConcreteClass $concreteClass)
+    {
+        $this->bind(ConcreteClassInterface::class, $concreteClass)->shouldReturn($this);
+    }
+
+    function it_should_throw_an_IdentifierAlreadyExistsException_on_duplicate_keys()
+    {
+        $this->set('ConcreteClassInterface', ConcreteClass::class);
+        $this->shouldThrow(IdentifierAlreadyExistsException::class)->duringSet('ConcreteClassInterface', ConcreteClass::class);
     }
 }

@@ -1,28 +1,25 @@
 <?php
 
 use App\Container;
-use App\Val;
-use App\NewClass;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $c = new Container();
 
-
-$c->set('val', Val::class);
-$c->set('newClass', NewClass::class);
-
 try {
-    $newVal = $c->get('object');
-    $newClass = $c->get('newClass');
+    $c->bind('ConcreteClassInterface', \App\ConcreteClass::class);
 } catch (Exception $e) {
-    print $e->getMessage();
+    print $e->getMessage() . '<br>';
 }
 
+try {
+    $c->set('ConcreteClassInterface', \App\ConcreteClass::class);
+} catch (Exception $e) {
+    print $e->getMessage() . '<br>';
+}
 
+$newVal = $c->get('ConcreteClassInterface');
 
 $newVal->sayHi();
-
 print '<br>';
-
-$newClass->sayHi();
+var_dump($c);

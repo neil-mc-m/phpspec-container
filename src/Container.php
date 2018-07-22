@@ -5,6 +5,7 @@ namespace App;
 use Psr\Container\ContainerInterface;
 use App\Exception\EntryNotFoundException;
 use App\Exception\InvalidIdentifierException;
+use App\Exception\IdentifierAlreadyExistsException;
 
 class Container implements ContainerInterface
 {
@@ -25,6 +26,7 @@ class Container implements ContainerInterface
      * @param string $id
      * @param string $classPath
      * @return bool
+     * @throws IdentifierAlreadyExistsException
      * @throws InvalidIdentifierException
      */
     public function set($id, $classPath)
@@ -32,9 +34,17 @@ class Container implements ContainerInterface
         if (!is_string($id)) {
             throw new InvalidIdentifierException('The identifier must be a string');
         }
+
         if (strlen($id) < 1) {
             throw new InvalidIdentifierException('The identifier must not be empty');
         }
+
+        if ($this->has($id) === true) {
+            $message = sprintf('That identifier already exists : %s', $id);
+
+            throw new IdentifierAlreadyExistsException($message);
+        }
+
         $this->instances[$id] = $classPath;
 
         return true;
@@ -57,5 +67,25 @@ class Container implements ContainerInterface
         $newInstance = new $classPath;
 
         return $newInstance;
+    }
+
+
+    /**
+     * @param string $interface
+     * @param string $concreteClass
+     * @return $this
+     * @throws IdentifierAlreadyExistsException
+     * @throws InvalidIdentifierException
+     */
+    public function bind($interface, $concreteClass)
+    {
+        if ($this->has($interface) === true) {
+            $message = sprintf('That identifier already exists : %s', $interface);
+
+            throw new IdentifierAlreadyExistsException($message);
+        }
+        $this->set($interface, $concreteClass);
+
+        return $this;
     }
 }
