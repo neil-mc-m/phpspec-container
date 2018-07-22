@@ -2,34 +2,60 @@
 
 namespace App;
 
-class Container
-{
+use Psr\Container\ContainerInterface;
+use App\Exception\EntryNotFoundException;
+use App\Exception\InvalidIdentifierException;
 
+class Container implements ContainerInterface
+{
+    /** @var array */
     private $instances = array();
 
-    public function has($key)
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function has($id)
     {
-        if (in_array($this->instances[$key], $this->instances)) {
-            return true;
-        }
-        return false;
+        return isset($this->instances[$id]);
     }
 
-    public function set($key, $class)
+
+    /**
+     * @param string $id
+     * @param string $classPath
+     * @return bool
+     * @throws InvalidIdentifierException
+     */
+    public function set($id, $classPath)
     {
-        $this->instances[$key] = $class;
+        if (!is_string($id)) {
+            throw new InvalidIdentifierException('The identifier must be a string');
+        }
+        if (strlen($id) < 1) {
+            throw new InvalidIdentifierException('The identifier must not be empty');
+        }
+        $this->instances[$id] = $classPath;
 
         return true;
     }
 
-    public function get($key)
+    /**
+     * @param string $id
+     * @return mixed
+     * @throws EntryNotFoundException
+     */
+    public function get($id)
     {
-        if ($this->has($key)) {
-            $class = $this->instances[$key];
-            $newInstance = new $class;
+        if ($this->has($id) === false) {
+            $message = sprintf('An entry wasnt found with that id : %s', $id);
 
-            return $newInstance;
+            throw new EntryNotFoundException($message);
         }
-        return 'Class not found';
+
+        $classPath = $this->instances[$id];
+        $newInstance = new $classPath;
+
+        return $newInstance;
     }
 }

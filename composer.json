@@ -9,5 +9,8 @@
     "psr-4": {
       "App\\": "src/"
     }
+  },
+  "require": {
+    "psr/container": "^1.0"
   }
 }

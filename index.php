@@ -8,12 +8,17 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $c = new Container();
 
+
 $c->set('val', Val::class);
 $c->set('newClass', NewClass::class);
 
+try {
+    $newVal = $c->get('object');
+    $newClass = $c->get('newClass');
+} catch (Exception $e) {
+    print $e->getMessage();
+}
 
-$newVal = $c->get('val');
-$newClass = $c->get('newClass');
 
 
 $newVal->sayHi();
