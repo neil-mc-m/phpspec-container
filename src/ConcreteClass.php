@@ -4,15 +4,11 @@ namespace App;
 
 class ConcreteClass implements ConcreteClassInterface
 {
+    private $serviceProvider;
 
-    private $email;
-
-    private $address;
-
-    public function __construct($string, $string2)
+    public function __construct(ServiceProviderInterface $serviceProvider)
     {
-        $this->email = $string;
-        $this->address = $string2;
+        $this->serviceProvider = $serviceProvider;
     }
 
     public function sayHi()

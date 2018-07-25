@@ -3,3 +3,5 @@ suites:
         namespace: App
         psr4_prefix: App
 formatter.name: pretty
+extensions:
+  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension: ~

@@ -2,10 +2,11 @@
 
 namespace App;
 
-use Psr\Container\ContainerInterface;
 use App\Exception\EntryNotFoundException;
-use App\Exception\InvalidIdentifierException;
 use App\Exception\IdentifierAlreadyExistsException;
+use App\Exception\InvalidIdentifierException;
+use Psr\Container\ContainerInterface;
+use ReflectionClass;
 
 class Container implements ContainerInterface
 {
@@ -14,6 +15,9 @@ class Container implements ContainerInterface
 
     /** @var array */
     private $instances = array();
+
+    /** @var array */
+    private $dependencies = array();
 
     /**
      * @param string $id
@@ -54,8 +58,9 @@ class Container implements ContainerInterface
 
     /**
      * @param string $id
-     * @return mixed
+     * @return mixed|object
      * @throws EntryNotFoundException
+     * @throws \ReflectionException
      */
     public function get($id)
     {
@@ -68,47 +73,68 @@ class Container implements ContainerInterface
         $classPath = $this->instances[$id];
 
 
-        return $classPath;
+        $reflection = new ReflectionClass($classPath);
+
+        $constructor = $reflection->getConstructor();
+
+        if (is_null($constructor)) {
+            return new $classPath;
+        }
+        $dependencies = $constructor->getParameters();
+
+
+        $instances = $this->resolveDependencies($dependencies);
+
+        $reflectedClass = $reflection->newInstanceArgs($instances);
+
+        return $reflectedClass;
+
     }
 
-
     /**
-     * @param string $interface
-     * @param string $concreteClass
-     * @return $this
-     * @throws IdentifierAlreadyExistsException
-     * @throws InvalidIdentifierException
+     * @param array $params
+     * @return self
      */
-    public function bind($interface, $concreteClass)
-    {
-        if ($this->has($interface) === true) {
-            $message = sprintf('That identifier already exists : %s', $interface);
 
-            throw new IdentifierAlreadyExistsException($message);
-        }
-        $this->set($interface, $concreteClass);
+    public function setParameters(array $params)
+    {
+        $this->parameters = $params;
 
         return $this;
     }
 
     /**
-     * @param array $params
-     * @return array $parameters
+     * @return bool
      */
-    public function setParams(array $params)
-    {
-        $this->parameters = $params;
-
-        return $this->parameters;
-    }
-
     public function hasParameters()
     {
         return isset($this->parameters);
     }
 
+    /**
+     * @return array
+     */
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+
+    /**
+     * @param array $dependencies
+     * @return array
+     * @throws EntryNotFoundException
+     * @throws \ReflectionException
+     */
+    public function resolveDependencies(array $dependencies)
+    {
+        foreach ($dependencies as $dependency) {
+
+            $param = $dependency->getClass();
+
+            $this->dependencies[] = $this->get($param->getShortName());
+
+        }
+        return $this->dependencies;
     }
 }

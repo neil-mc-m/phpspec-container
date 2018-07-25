@@ -72,7 +72,7 @@ class ContainerSpec extends ObjectBehavior
 
     function it_should_be_able_to_register_parameters_on_an_object()
     {
-        $this->setParams(array('string', 'another string'))->shouldReturn(array('string', 'another string'));
+        $this->setParameters(array('string', 'another string'))->shouldReturn($this);
     }
 
     function it_can_check_for_parameters()
