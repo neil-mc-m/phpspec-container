@@ -10,6 +10,9 @@ use App\Exception\IdentifierAlreadyExistsException;
 class Container implements ContainerInterface
 {
     /** @var array */
+    public $parameters = array();
+
+    /** @var array */
     private $instances = array();
 
     /**
@@ -20,7 +23,6 @@ class Container implements ContainerInterface
     {
         return isset($this->instances[$id]);
     }
-
 
     /**
      * @param string $id
@@ -64,9 +66,9 @@ class Container implements ContainerInterface
         }
 
         $classPath = $this->instances[$id];
-        $newInstance = new $classPath;
 
-        return $newInstance;
+
+        return $classPath;
     }
 
 
@@ -87,5 +89,26 @@ class Container implements ContainerInterface
         $this->set($interface, $concreteClass);
 
         return $this;
+    }
+
+    /**
+     * @param array $params
+     * @return array $parameters
+     */
+    public function setParams(array $params)
+    {
+        $this->parameters = $params;
+
+        return $this->parameters;
+    }
+
+    public function hasParameters()
+    {
+        return isset($this->parameters);
+    }
+
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 }

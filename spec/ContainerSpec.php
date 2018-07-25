@@ -2,16 +2,15 @@
 
 namespace spec\App;
 
-use App\Container;
-use App\Exception\IdentifierAlreadyExistsException;
-use PhpSpec\ObjectBehavior;
-use App\Val;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use App\Exception\InvalidIdentifierException;
-use App\ServiceProviderInterface;
 use App\ConcreteClass;
 use App\ConcreteClassInterface;
+use App\Container;
+use App\Exception\IdentifierAlreadyExistsException;
+use App\Exception\InvalidIdentifierException;
+use App\ServiceProviderInterface;
+use PhpSpec\ObjectBehavior;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ContainerSpec extends ObjectBehavior
 {
@@ -69,5 +68,15 @@ class ContainerSpec extends ObjectBehavior
     {
         $this->set('ConcreteClassInterface', ConcreteClass::class);
         $this->shouldThrow(IdentifierAlreadyExistsException::class)->duringSet('ConcreteClassInterface', ConcreteClass::class);
+    }
+
+    function it_should_be_able_to_register_parameters_on_an_object()
+    {
+        $this->setParams(array('string', 'another string'))->shouldReturn(array('string', 'another string'));
+    }
+
+    function it_can_check_for_parameters()
+    {
+        $this->hasParameters()->shouldBeBool();
     }
 }
