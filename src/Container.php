@@ -119,7 +119,6 @@ class Container implements ContainerInterface
         return $this->parameters;
     }
 
-
     /**
      * @param array $dependencies
      * @return array
@@ -133,11 +132,7 @@ class Container implements ContainerInterface
             $this->parameters[] = $dependency->getClass();
 
         }
-        var_dump($this->parameters);
        
-       
-        
-        var_dump($this->dependencies);
         return $this->dependencies;
     }
 }
