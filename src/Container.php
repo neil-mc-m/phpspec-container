@@ -130,12 +130,14 @@ class Container implements ContainerInterface
     {
         foreach ($dependencies as $dependency) {
 
-            $param = $dependency->getClass();
+            $this->parameters[] = $dependency->getClass();
 
         }
-        $this->dependencies[] = $this->get($param->getShortName());
-        var_dump($param);
-        var_dump($dependencies);
+        var_dump($this->parameters);
+       
+       
+        
+        var_dump($this->dependencies);
         return $this->dependencies;
     }
 }
