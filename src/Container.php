@@ -84,7 +84,7 @@ class Container implements ContainerInterface
 
 
         $instances = $this->resolveDependencies($dependencies);
-        var_dump($instances);
+        // var_dump($instances);
         $reflectedClass = $reflection->newInstanceArgs($instances);
 
         return $reflectedClass;
@@ -132,9 +132,10 @@ class Container implements ContainerInterface
 
             $param = $dependency->getClass();
 
-            $this->dependencies[] = $this->get($param->getShortName());
-
         }
+        $this->dependencies[] = $this->get($param->getShortName());
+        var_dump($param);
+        var_dump($dependencies);
         return $this->dependencies;
     }
 }

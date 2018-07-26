@@ -1,7 +1,8 @@
 {
   "require-dev": {
     "phpspec/phpspec": "^4.0",
-    "leanphp/phpspec-code-coverage": "^4.1"
+    "leanphp/phpspec-code-coverage": "^4.1",
+    "php-coveralls/php-coveralls": "^2.1"
   },
   "autoload": {
     "psr-4": {

@@ -2,4 +2,9 @@ language: php
 php:
   - '7.0'
 install : composer install
-script: vendor/bin/phpspec run
+script:
+  - mkdir -p build/logs
+  - vendor/bin/phpspec run
+after_success:
+  - travis_retry php vendor/bin/php-coveralls 
+  
