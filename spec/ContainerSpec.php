@@ -59,10 +59,6 @@ class ContainerSpec extends ObjectBehavior
         $this->shouldThrow(InvalidIdentifierException::class)->duringSet('', 'ClassPath');
     }
 
-    function it_can_bind_an_interface_to_a_concrete_implementation(ConcreteClass $concreteClass)
-    {
-        $this->bind(ConcreteClassInterface::class, $concreteClass)->shouldReturn($this);
-    }
 
     function it_should_throw_an_IdentifierAlreadyExistsException_on_duplicate_keys()
     {

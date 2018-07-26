@@ -84,7 +84,7 @@ class Container implements ContainerInterface
 
 
         $instances = $this->resolveDependencies($dependencies);
-
+        var_dump($instances);
         $reflectedClass = $reflection->newInstanceArgs($instances);
 
         return $reflectedClass;

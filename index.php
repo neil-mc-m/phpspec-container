@@ -10,8 +10,9 @@ $c = new Container();
 
 $c->set('Concrete', ConcreteClass::class);
 $c->set('ServiceProviderInterface', ServiceProvider::class);
+$c->set('CacheProvider', \App\CacheProvider::class);
 
 $class = $c->get('Concrete');
 
 
-var_dump($class);
+print $class->sayHi();
