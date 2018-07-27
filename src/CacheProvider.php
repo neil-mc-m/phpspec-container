@@ -9,6 +9,6 @@ class CacheProvider
 
 	public function __construct(ServiceProviderInterface $serviceProvider)
 	{
-		$this->serviceProvider = $ServiceProvider;
+		$this->serviceProvider = $serviceProvider;
 	}
 }

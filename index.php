@@ -15,4 +15,4 @@ $c->set('CacheProvider', \App\CacheProvider::class);
 $class = $c->get('Concrete');
 
 
-// var_dump($class);
+var_dump($class);

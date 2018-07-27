@@ -82,9 +82,12 @@ class Container implements ContainerInterface
         }
         $dependencies = $constructor->getParameters();
 
-
         $instances = $this->resolveDependencies($dependencies);
-        // var_dump($instances);
+
+
+        var_dump($dependencies);
+
+
         $reflectedClass = $reflection->newInstanceArgs($instances);
 
         return $reflectedClass;
@@ -129,10 +132,15 @@ class Container implements ContainerInterface
     {
         foreach ($dependencies as $dependency) {
 
-            $this->parameters[] = $dependency->getClass();
+            $depend = $dependency->getClass();
+            var_dump($depend);
+            if ($depend === null) {
+                return;
+            }
+            $dependencies[] = $this->get($depend->getShortName());
 
         }
        
-        return $this->dependencies;
+        return $dependencies;
     }
 }
