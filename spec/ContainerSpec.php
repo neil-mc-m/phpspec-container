@@ -3,7 +3,6 @@
 namespace spec\App;
 
 use App\ConcreteClass;
-use App\ConcreteClassInterface;
 use App\Container;
 use App\Exception\IdentifierAlreadyExistsException;
 use App\Exception\InvalidIdentifierException;
@@ -24,9 +23,9 @@ class ContainerSpec extends ObjectBehavior
         $this->shouldImplement(ContainerInterface::class);
     }
 
-    function it_can_set_values_on_the_container(ServiceProviderInterface $serviceProvider)
+    function it_can_set_values_on_the_container(TestOne $test1)
     {
-        $this->set('ExampleServiceProvider', $serviceProvider)->shouldReturn(true);
+        $this->set('TestOne', $test1)->shouldReturn(true);
     }
 
     function it_should_always_return_a_bool_from_the_has_method()
@@ -34,17 +33,17 @@ class ContainerSpec extends ObjectBehavior
         $this->callOnWrappedObject('has', array('string'))->shouldBeBool();
     }
 
-    function it_can_check_if_classes_are_set(ServiceProviderInterface $serviceProvider)
+    function it_can_check_if_classes_are_set(TestOne $test1)
     {
-        $this->set('ExampleId', $serviceProvider);
-        $this->has('ExampleId')->shouldReturn(true);
-        $this->has('newObject')->shouldReturn(false);
+        $this->set('TestOne', $test1);
+        $this->has('TestOne')->shouldReturn(true);
+        $this->has('Test2')->shouldReturn(false);
     }
 
-    function it_can_initialize_objects_from_the_container(ServiceProviderInterface $serviceProvider)
+    function it_can_initialize_objects_from_the_container(TestOne $test1)
     {
-        $this->set('ExampleObject', $serviceProvider);
-        $this->get('ExampleObject')->shouldReturnAnInstanceOf(ServiceProviderInterface::class);
+        $this->set('TestOne', $test1);
+        $this->get('TestOne')->shouldReturnAnInstanceOf(TestOne::class);
     }
 
     function it_should_throw_a_NotFoundException_if_no_entry_is_found()
@@ -62,17 +61,23 @@ class ContainerSpec extends ObjectBehavior
 
     function it_should_throw_an_IdentifierAlreadyExistsException_on_duplicate_keys()
     {
-        $this->set('ConcreteClassInterface', ConcreteClass::class);
-        $this->shouldThrow(IdentifierAlreadyExistsException::class)->duringSet('ConcreteClassInterface', ConcreteClass::class);
+        $this->set('TestOne', TestOne::class);
+        $this->shouldThrow(IdentifierAlreadyExistsException::class)->duringSet('TestOne', TestOne::class);
     }
+}
+class TestOne
+{
 
-    function it_should_be_able_to_register_parameters_on_an_object()
+    public function __construct()
     {
-        $this->setParameters(array('string', 'another string'))->shouldReturn($this);
+
     }
+}
+class TestTwo
+{
 
-    function it_can_check_for_parameters()
+    public function __construct()
     {
-        $this->hasParameters()->shouldBeBool();
+
     }
 }

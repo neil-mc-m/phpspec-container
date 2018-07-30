@@ -1,18 +1,9 @@
 <?php
 
 use App\Container;
-use App\ConcreteClass;
-use App\ServiceProvider;
+use App\EventDispatcher;
+use Symfony\Component\FileSystem;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $c = new Container();
-
-$c->set('Concrete', ConcreteClass::class);
-$c->set('ServiceProviderInterface', ServiceProvider::class);
-$c->set('CacheProvider', \App\CacheProvider::class);
-
-$class = $c->get('Concrete');
-
-
-var_dump($class);

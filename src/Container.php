@@ -16,9 +16,6 @@ class Container implements ContainerInterface
     /** @var array */
     private $instances = array();
 
-    /** @var array */
-    private $dependencies = array();
-
     /**
      * @param string $id
      * @return bool
@@ -72,7 +69,6 @@ class Container implements ContainerInterface
 
         $classPath = $this->instances[$id];
 
-
         $reflection = new ReflectionClass($classPath);
 
         $constructor = $reflection->getConstructor();
@@ -80,46 +76,13 @@ class Container implements ContainerInterface
         if (is_null($constructor)) {
             return new $classPath;
         }
+
         $dependencies = $constructor->getParameters();
-
         $instances = $this->resolveDependencies($dependencies);
-
-
-        var_dump($dependencies);
-
-
         $reflectedClass = $reflection->newInstanceArgs($instances);
 
         return $reflectedClass;
 
-    }
-
-    /**
-     * @param array $params
-     * @return self
-     */
-
-    public function setParameters(array $params)
-    {
-        $this->parameters = $params;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasParameters()
-    {
-        return isset($this->parameters);
-    }
-
-    /**
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
     }
 
     /**
@@ -130,17 +93,19 @@ class Container implements ContainerInterface
      */
     public function resolveDependencies(array $dependencies)
     {
+        $resolvedDependencies = array();
+
         foreach ($dependencies as $dependency) {
 
-            $depend = $dependency->getClass();
-            var_dump($depend);
-            if ($depend === null) {
+            $class = $dependency->getClass();
+
+            if ($class === null) {
                 return;
             }
-            $dependencies[] = $this->get($depend->getShortName());
 
+            $resolvedDependencies[] = $this->get($class->getShortName());
         }
        
-        return $dependencies;
+        return $resolvedDependencies;
     }
 }
