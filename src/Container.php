@@ -11,9 +11,6 @@ use ReflectionClass;
 class Container implements ContainerInterface
 {
     /** @var array */
-    public $parameters = array();
-
-    /** @var array */
     private $instances = array();
 
     /**
@@ -103,9 +100,20 @@ class Container implements ContainerInterface
                 return;
             }
 
-            $resolvedDependencies[] = $this->get($class->getShortName());
+            $resolvedDependencies[] = $this->get($class->getName());
         }
        
         return $resolvedDependencies;
+    }
+
+    /**
+     * @param ServiceProviderInterface
+     * @param string $id
+     * @return static
+     */
+    public function register($id, ServiceProviderInterface $serviceProvider)
+    {
+       $this->instances[$id] = $serviceProvider->register();
+       return $this;
     }
 }

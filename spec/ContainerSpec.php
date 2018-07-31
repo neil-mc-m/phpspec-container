@@ -64,8 +64,32 @@ class ContainerSpec extends ObjectBehavior
         $this->set('TestOne', TestOne::class);
         $this->shouldThrow(IdentifierAlreadyExistsException::class)->duringSet('TestOne', TestOne::class);
     }
+
+    function it_can_register_a_service_provider_on_the_container()
+    {
+        $this->register('TestOne', new TestOneServiceProvider())->shouldReturn($this);
+    }
+
+    function it_should_return_the_instance_from_the_service_provider()
+    {
+        $this->register('TestOne', new TestOneServiceProvider())->shouldReturn($this);
+        $this->get('TestOne')->shouldReturnAnInstanceOf(TestOne::class);    
+    }
+
 }
+
+/**
+ * Test Classes.
+ */
 class TestOne
+{
+    public function __construct()
+    {
+
+    }
+}
+
+class TestTwo
 {
 
     public function __construct()
@@ -73,11 +97,11 @@ class TestOne
 
     }
 }
-class TestTwo
+
+class TestOneServiceProvider implements ServiceProviderInterface
 {
-
-    public function __construct()
+    public function register()
     {
-
+        return new TestOne();
     }
 }

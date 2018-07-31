@@ -1,9 +1,11 @@
 <?php
 
 use App\Container;
-use App\EventDispatcher;
-use Symfony\Component\FileSystem;
+use App\EventDispatcherServiceProvider;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $c = new Container();
+$c->register('EventDispatcher', new EventDispatcherServiceProvider());
+$e = $c->get('EventDispatcher');
+var_dump($e);// instance of symfony eventdispatcher
