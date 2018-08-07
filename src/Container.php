@@ -46,7 +46,7 @@ class Container implements ContainerInterface
         }
 
         $this->instances[$id] = $classPath;
-
+        var_dump($this->instances[$id]);
         return true;
     }
 
@@ -66,6 +66,9 @@ class Container implements ContainerInterface
 
         $classPath = $this->instances[$id];
 
+        if (is_callable($classPath)) {
+            return call_user_func($classPath);
+        }
         $reflection = new ReflectionClass($classPath);
 
         $constructor = $reflection->getConstructor();
@@ -113,7 +116,7 @@ class Container implements ContainerInterface
      */
     public function register($id, ServiceProviderInterface $serviceProvider)
     {
-       $this->instances[$id] = $serviceProvider->register();
+       $this->instances[$id] = $serviceProvider->register($this);
        return $this;
     }
 }

@@ -5,5 +5,5 @@ namespace App;
 
 interface ServiceProviderInterface
 {
-    public function register();
+    public function register(Container $c);
 }
