@@ -46,7 +46,7 @@ class Container implements ContainerInterface
         }
 
         $this->instances[$id] = $classPath;
-        var_dump($this->instances[$id]);
+        
         return true;
     }
 
@@ -116,7 +116,9 @@ class Container implements ContainerInterface
      */
     public function register($id, ServiceProviderInterface $serviceProvider)
     {
-       $this->instances[$id] = $serviceProvider->register($this);
-       return $this;
+        $callable = $serviceProvider->register($this);
+        $this->instances[$id] = $callable;
+
+        return $this;
     }
 }

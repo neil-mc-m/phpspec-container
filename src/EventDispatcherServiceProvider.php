@@ -12,7 +12,8 @@ class EventDispatcherServiceProvider implements ServiceProviderInterface
     	$callable = function() { 
     		return new EventDispatcher(); 
     	};
-        $c->set('EventDispatcher', $callable);
+    	
+        return $callable;
     }
 
 }

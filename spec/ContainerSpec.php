@@ -76,6 +76,13 @@ class ContainerSpec extends ObjectBehavior
         $this->get('TestOne')->shouldReturnAnInstanceOf(TestOne::class);    
     }
 
+    function it_should_resolve_a_closure_from_the_container()
+    {
+        $this->register('TestOne', new TestOneServiceProvider())->shouldReturn($this);
+
+
+    }
+
 }
 
 /**
@@ -100,8 +107,12 @@ class TestTwo
 
 class TestOneServiceProvider implements ServiceProviderInterface
 {
-    public function register()
+    public function register(Container $c)
     {
-        return new TestOne();
+        $callable = function () {
+            return new TestOne();
+        };
+        
+        return $callable;
     }
 }
