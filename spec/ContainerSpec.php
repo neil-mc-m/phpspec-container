@@ -58,7 +58,6 @@ class ContainerSpec extends ObjectBehavior
         $this->shouldThrow(InvalidIdentifierException::class)->duringSet('', 'ClassPath');
     }
 
-
     function it_should_throw_an_IdentifierAlreadyExistsException_on_duplicate_keys()
     {
         $this->set('TestOne', TestOne::class);
@@ -76,11 +75,13 @@ class ContainerSpec extends ObjectBehavior
         $this->get('TestOne')->shouldReturnAnInstanceOf(TestOne::class);    
     }
 
-    function it_should_resolve_a_closure_from_the_container()
+    function it_should_resolve_classes_that_depend_on_other_classes_in_the_constructor()
     {
-        $this->register('TestOne', new TestOneServiceProvider())->shouldReturn($this);
+        $this->set('TestOne', TestOne::class);
+        $this->set('TestTwo', TestTwo::class);
 
-
+//        var_dump($this->getWrappedObject());
+        $this->callOnWrappedObject('get', array('TestTwo'))->shouldReturnAnInstanceOf(TestTwo::class);
     }
 
 }
@@ -98,9 +99,11 @@ class TestOne
 
 class TestTwo
 {
+    public $testone;
 
-    public function __construct()
+    public function __construct(TestOne $testone)
     {
+        $this->testone = $testone;
 
     }
 }

@@ -78,7 +78,9 @@ class Container implements ContainerInterface
         }
 
         $dependencies = $constructor->getParameters();
+
         $instances = $this->resolveDependencies($dependencies);
+
         $reflectedClass = $reflection->newInstanceArgs($instances);
 
         return $reflectedClass;
@@ -103,15 +105,15 @@ class Container implements ContainerInterface
                 return;
             }
 
-            $resolvedDependencies[] = $this->get($class->getName());
+            $resolvedDependencies[] = $this->get($class->getShortName());
         }
        
         return $resolvedDependencies;
     }
 
     /**
-     * @param ServiceProviderInterface
      * @param string $id
+     * @param ServiceProviderInterface
      * @return static
      */
     public function register($id, ServiceProviderInterface $serviceProvider)
