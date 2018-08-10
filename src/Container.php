@@ -46,7 +46,7 @@ class Container implements ContainerInterface
         }
 
         $this->instances[$id] = $classPath;
-        
+
         return true;
     }
 
@@ -96,18 +96,21 @@ class Container implements ContainerInterface
     public function resolveDependencies(array $dependencies)
     {
         $resolvedDependencies = array();
+        $resolvedArguments = array();
 
         foreach ($dependencies as $dependency) {
 
             $class = $dependency->getClass();
 
             if ($class === null) {
-                return;
+                $resolvedArguments[] = $dependency->getName();
+                var_dump($resolvedArguments);
+                return $resolvedArguments;
             }
 
             $resolvedDependencies[] = $this->get($class->getShortName());
         }
-       
+
         return $resolvedDependencies;
     }
 
@@ -123,4 +126,5 @@ class Container implements ContainerInterface
 
         return $this;
     }
+
 }

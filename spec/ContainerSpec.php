@@ -72,7 +72,7 @@ class ContainerSpec extends ObjectBehavior
     function it_should_return_the_instance_from_the_service_provider()
     {
         $this->register('TestOne', new TestOneServiceProvider())->shouldReturn($this);
-        $this->get('TestOne')->shouldReturnAnInstanceOf(TestOne::class);    
+        $this->get('TestOne')->shouldReturnAnInstanceOf(TestOne::class);
     }
 
     function it_should_resolve_classes_that_depend_on_other_classes_in_the_constructor()
@@ -82,6 +82,13 @@ class ContainerSpec extends ObjectBehavior
 
 //        var_dump($this->getWrappedObject());
         $this->callOnWrappedObject('get', array('TestTwo'))->shouldReturnAnInstanceOf(TestTwo::class);
+    }
+
+    function it_should_get_a_classes_properties()
+    {
+        $this->set('TestThree', TestThree::class);
+        $t = $this->get('TestThree')->shouldReturnAnInstanceOf(TestThree::class);
+        var_dump($t);
     }
 
 }
@@ -108,6 +115,16 @@ class TestTwo
     }
 }
 
+class TestThree
+{
+  public $name;
+
+  public function __construct(string $name)
+  {
+      $this->name = $name;
+  }
+}
+
 class TestOneServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $c)
@@ -115,7 +132,7 @@ class TestOneServiceProvider implements ServiceProviderInterface
         $callable = function () {
             return new TestOne();
         };
-        
+
         return $callable;
     }
 }
