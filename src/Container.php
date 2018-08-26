@@ -13,6 +13,9 @@ class Container implements ContainerInterface
     /** @var array */
     private $instances = array();
 
+    /** @var array */
+    private $parameters = array();
+
     /**
      * @param string $id
      * @return bool
@@ -79,9 +82,9 @@ class Container implements ContainerInterface
 
         $dependencies = $constructor->getParameters();
 
-        $instances = $this->resolveDependencies($dependencies);
+        $resolved = $this->resolveDependencies($dependencies);
 
-        $reflectedClass = $reflection->newInstanceArgs($instances);
+        $reflectedClass = $reflection->newInstanceArgs($resolved);
 
         return $reflectedClass;
 
@@ -95,20 +98,47 @@ class Container implements ContainerInterface
      */
     public function resolveDependencies(array $dependencies)
     {
-        $resolvedDependencies = array();
+        $resolved = array();
 
         foreach ($dependencies as $dependency) {
 
             $class = $dependency->getClass();
 
-            if ($class === null) {
-                return;
-            }
-
-            $resolvedDependencies[] = $this->get($class->getShortName());
+            $resolved[] = $class === null
+                ? $dependency->getName()
+                : $this->get($class->getShortName());
         }
        
-        return $resolvedDependencies;
+        return $resolved;
+    }
+
+
+    /**
+     * @param array $parameters
+     * @return $this
+     */
+    public function withArguments(array $parameters)
+    {
+        foreach ($parameters as $param) {
+            $this->parameters[] = $param;
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * @param string $class
+     * @return object
+     * @throws \ReflectionException
+     */
+    public function build($class)
+    {
+        $classPath = $this->instances[$class];
+        $reflection = new ReflectionClass($classPath);
+        $reflectedClass = $reflection->newInstanceArgs($this->parameters);
+
+        return $reflectedClass;
     }
 
     /**

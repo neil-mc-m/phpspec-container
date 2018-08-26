@@ -79,9 +79,13 @@ class ContainerSpec extends ObjectBehavior
     {
         $this->set('TestOne', TestOne::class);
         $this->set('TestTwo', TestTwo::class);
-
-//        var_dump($this->getWrappedObject());
         $this->callOnWrappedObject('get', array('TestTwo'))->shouldReturnAnInstanceOf(TestTwo::class);
+    }
+
+    function it_should_resolve_primitive_values_via_the_constructor()
+    {
+        $this->set('Test3', TestThree::class);
+        $this->get('Test3')->shouldReturnAnInstanceOf(TestThree::class);
     }
 
 }
@@ -105,6 +109,16 @@ class TestTwo
     {
         $this->testone = $testone;
 
+    }
+}
+
+class TestThree
+{
+    public $name;
+
+    public function __construct($name = 'neil')
+    {
+        $this->name = $name;
     }
 }
 
