@@ -7,17 +7,16 @@ use App\Container;
 
 class EventDispatcherServiceProvider implements ServiceProviderInterface
 {
-
     /**
      * @param \App\Container $c
      * @return \Closure
      */
     public function register(Container $c)
     {
-    	$callable = function() { 
-    		return new EventDispatcher(); 
+    	$callable = function() {
+    		return new EventDispatcher();
     	};
-    	
+
         return $callable;
     }
 
