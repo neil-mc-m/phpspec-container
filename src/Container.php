@@ -72,7 +72,7 @@ class Container implements ContainerInterface
         if (is_callable($classPath)) {
             return call_user_func($classPath);
         }
-        $reflection = new ReflectionClass($classPath);
+        $reflection = $this->getReflectedClass($classPath);
 
         $constructor = $reflection->getConstructor();
 
@@ -84,7 +84,7 @@ class Container implements ContainerInterface
 
         $resolved = $this->resolveDependencies($dependencies);
 
-        $reflectedClass = $reflection->newInstanceArgs($resolved);
+        $reflectedClass = $this->createInstance($reflection, $resolved);
 
         return $reflectedClass;
 
@@ -135,8 +135,44 @@ class Container implements ContainerInterface
     public function build($class)
     {
         $classPath = $this->instances[$class];
+        $reflectedClass = $this->reflectClass($classPath);
+
+        return $reflectedClass;
+    }
+
+    /**
+     * @param string $classPath
+     * @return object
+     * @throws \ReflectionException
+     */
+    private function reflectClass($classPath)
+    {
+        $reflection = $this->getReflectedClass($classPath);
+        $reflectedClass = $this->createInstance($reflection, $this->parameters);
+
+        return $reflectedClass;
+    }
+
+    /**
+     * @param $classPath
+     * @return ReflectionClass
+     * @throws \ReflectionException
+     */
+    private function getReflectedClass($classPath)
+    {
         $reflection = new ReflectionClass($classPath);
-        $reflectedClass = $reflection->newInstanceArgs($this->parameters);
+
+        return $reflection;
+    }
+
+    /**
+     * @param $reflection
+     * @param $resolved
+     * @return mixed
+     */
+    private function createInstance($reflection, $resolved)
+    {
+        $reflectedClass = $reflection->newInstanceArgs($resolved);
 
         return $reflectedClass;
     }
@@ -153,4 +189,5 @@ class Container implements ContainerInterface
 
         return $this;
     }
+
 }
