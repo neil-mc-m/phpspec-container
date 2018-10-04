@@ -1,26 +1,24 @@
 <?php
 
 use App\Container;
-use App\EventDispatcherServiceProvider;
+use App\TestClass2;
 use App\TestClass;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $c = new Container();
+$c->set('Test2', TestClass2::class);
 
-$c->register('EventDispatcher', new EventDispatcherServiceProvider());
+$c->set('Test', function () use ($c) {
+    $test2 = $c->get('Test2');
+    return new TestClass($test2, 'anemail@gmail.com', '1');
+});
+
+$testClass = $c->get('Test');
 
 
-$c->set('TestClass', TestClass::class);
+
+print_r($testClass->getName());
 
 
-$e = $c->get('EventDispatcher');
 
-
-$test = $c
-    ->withArguments(array('neil', 'neilo2000@gmail.com'))
-    ->build('TestClass');
-
-echo '<pre style="direction: ltr; text-align: left">';
-print_r($c);
-echo '</pre>';

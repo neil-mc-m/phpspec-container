@@ -97,28 +97,12 @@ class ContainerSpec extends ObjectBehavior
             ->shouldReturnAnInstanceOf(TestOne::class);
     }
 
-    function it_should_resolve_classes_that_depend_on_other_classes_in_the_constructor()
+    function it_should_resolve_closures_from_the_container()
     {
-        $this->set('TestOne', TestOne::class);
-        $this->set('TestTwo', TestTwo::class);
-        $this
-            ->callOnWrappedObject('get', array('TestTwo'))
-            ->shouldReturnAnInstanceOf(TestTwo::class);
-    }
-
-    function it_should_resolve_primitive_values_via_the_constructor()
-    {
-        $this->set('Test3', TestThree::class);
-        $this->get('Test3')->shouldReturnAnInstanceOf(TestThree::class);
-    }
-
-    function it_should_build_an_object_with_parameters()
-    {
-        $this->set('TestThree', TestThree::class);
-        $this
-            ->withArguments(array('neil'))
-            ->build('TestThree')
-            ->shouldReturnAnInstanceOf(TestThree::class);
+        $this->set('TestOne', function () {
+            return new TestOne();
+        });
+        $this->get('TestOne')->shouldReturnAnInstanceOf(TestOne::class);
     }
 
 }
@@ -162,7 +146,7 @@ class TestOneServiceProvider implements ServiceProviderInterface
         $callable = function () {
             return new TestOne();
         };
-        
+
         return $callable;
     }
 }

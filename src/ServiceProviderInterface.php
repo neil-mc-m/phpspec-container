@@ -5,7 +5,6 @@ namespace App;
 
 interface ServiceProviderInterface
 {
-
     /**
      * @param Container $c
      * @return Closure
