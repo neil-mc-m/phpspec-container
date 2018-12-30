@@ -12,11 +12,13 @@ class Container implements ContainerInterface
 {
     /** @var array */
     private $instances = array();
-    
+
+    /**
+     * @return static
+     */
     public static function make()
     {
         return new static();
-
     }
 
     /**
@@ -29,7 +31,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param string $id
+     * @param string|mixed $id
      * @param string $classPath
      * @return bool
      * @throws IdentifierAlreadyExistsException
@@ -82,7 +84,7 @@ class Container implements ContainerInterface
 
     /**
      * @param string $id
-     * @param ServiceProviderInterface
+     * @param ServiceProviderInterface $serviceProvider
      * @return static
      */
     public function register($id, ServiceProviderInterface $serviceProvider)
