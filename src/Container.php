@@ -12,13 +12,11 @@ class Container implements ContainerInterface
 {
     /** @var array */
     private $instances = array();
-
-    /**
-     * @return static
-     */
+    
     public static function make()
     {
         return new static();
+
     }
 
     /**
