@@ -14,6 +14,14 @@ class Container implements ContainerInterface
     private $instances = array();
 
     /**
+     * @return static
+     */
+    public static function make()
+    {
+        return new static();
+    }
+
+    /**
      * @param string $id
      * @return bool
      */
