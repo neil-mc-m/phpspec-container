@@ -105,6 +105,12 @@ class ContainerSpec extends ObjectBehavior
         $this->get('TestOne')->shouldReturnAnInstanceOf(TestOne::class);
     }
 
+    function it_should_be_constructed_with_a_named_static_method_called_make()
+    {
+        $this->beConstructedThroughNamed('Make');
+
+    }
+
 }
 
 /**
