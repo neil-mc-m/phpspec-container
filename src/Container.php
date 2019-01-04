@@ -39,13 +39,7 @@ class Container implements ContainerInterface
      */
     public function set($id, $classPath)
     {
-        if (!is_string($id)) {
-            throw new InvalidIdentifierException('The identifier must be a string');
-        }
-
-        if (strlen($id) < 1) {
-            throw new InvalidIdentifierException('The identifier must not be empty');
-        }
+        $this->validateAsString($id);
 
         if ($this->has($id) === true) {
             $message = sprintf('That identifier already exists : %s', $id);
@@ -93,6 +87,21 @@ class Container implements ContainerInterface
         $this->instances[$id] = $callable;
 
         return $this;
+    }
+
+    /**
+     * @param string|mixed $id
+     * @throws InvalidIdentifierException
+     */
+    private function validateAsString($id)
+    {
+        if (!is_string($id)) {
+            throw new InvalidIdentifierException('The identifier must be a string');
+        }
+
+        if (strlen($id) < 1) {
+            throw new InvalidIdentifierException('The identifier must not be empty');
+        }
     }
 
 }
